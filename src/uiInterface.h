@@ -1,8 +1,6 @@
 #ifndef UIINTERFACE_H
 #define UIINTERFACE_H
 
-#include "record.h"
-
 struct InfoRecord;
 struct ErrorRecord;
 struct MeasureRecord;

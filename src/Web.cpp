@@ -1,14 +1,14 @@
-#if defined(WEB) || defined(Compaund)
+#if defined(WEB) || defined(Compound)
+#include "config.h"
 #include "Web.h"
 #include <WebServer.h>
 
 WebServer *server;
-String Map(SignalType st);
 
 void Web::begin()
 {
   Setup_Wifi_AP();
-  server = new WebServer(80);
+  server = new WebServer(WEB_SERVER_PORT);
   server->on("/", std::bind(&Web::handle_root, this));
   server->begin();
   Serial.println("HTTP server started");
@@ -28,7 +28,7 @@ String HTMLHeader = "<!DOCTYPE html>\
 <html>\
 <head>\
     <title>Sensirion BLE</title>\
-    <meta http-equiv=\"refresh\" content=\"5\">\
+    <meta http-equiv=\"refresh\" content=\"" + String(WEB_REFRESH_SECONDS) + "\">\
 </head>\
 <body>\
 <h1>Web Server with ESP32 &#128522;</h1>";
@@ -58,7 +58,7 @@ void Web::visit(MeasureRecord *record) { push_back("<p>" + record->toString() + 
 void Web::push_back(String entry)
 {
   _records.push_back(entry);
-  while (_records.size() > 30)
+  while (_records.size() > WEB_MAX_RECORDS)
   {
     _records.erase(_records.begin());
   }

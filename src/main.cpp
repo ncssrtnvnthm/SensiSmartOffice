@@ -1,24 +1,28 @@
-#include "Sfa3x.h"
+#include <Arduino.h>
+#include "config.h"
 #include "sensorContainer.h"
 #ifdef WEB
 #include "Web.h"
 #endif
-#ifdef BLE
-#include "gatgetBle.h"
+#ifdef USE_BLE
+#include "gadgetBle.h"
 #endif
-#ifdef Compaund
-#include "compaundUi.h"
+#ifdef Compound
+#include "compoundUi.h"
+#endif
+#ifdef LCD
+#include "LcdDisplay.h"
 #endif
 
 uiInterface *ui;
 ulong iteration = 0;
 SensorContainer sensors;
-static int measurementIntervalMs = 5000;
+static int measurementIntervalMs = MEASUREMENT_INTERVAL_MS;
 int64_t lastMeasurementTimeMs = 0;
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(SERIAL_BAUD);
   Serial.println("\nI2C Scanner");
   pinMode(18, OUTPUT);
 
@@ -27,11 +31,14 @@ void setup()
 #ifdef WEB
   ui = new Web();
 #endif
-#ifdef BLE
-  ui = new GatgetBle();
+#ifdef USE_BLE
+  ui = new GadgetBle();
 #endif
-#ifdef Compaund
-  ui = new CompaundUi();
+#ifdef Compound
+  ui = new CompoundUi();
+#endif
+#ifdef LCD
+  ui = new LcdDisplay();
 #endif
 
   ui->begin();
@@ -52,12 +59,12 @@ void loop()
     sensors.accept(ui);
 
     ui->commitMeasures();
-    delay(500);
+    delay(COMMIT_DELAY_MS);
     Serial.print(".");
     
     lastMeasurementTimeMs = millis();    
   };
   
   ui->handleNetwork();
-  delay(3);
+  delay(LOOP_DELAY_MS);
 }

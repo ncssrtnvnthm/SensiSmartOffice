@@ -2,6 +2,7 @@
 #define WEB_H
 
 #include "uiInterface.h"
+#include "record.h"
 #include <vector>
 
 void Setup_Wifi();

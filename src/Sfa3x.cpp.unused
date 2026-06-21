@@ -21,6 +21,9 @@ void Sfa3xSensor::read()
     if (error)
     {
         HandleError("Error trying to execute readMeasuredValues(): ", error);
+        error = sfa3x.deviceReset();
+        HandleError("Error trying to execute deviceReset(): ", error);
+        startMeasurement();
         return;
     }
 

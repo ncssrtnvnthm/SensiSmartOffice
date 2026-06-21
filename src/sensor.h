@@ -8,9 +8,6 @@
 class SensorContainer;
 class Sensor
 {
-private:
-    Sensor() {}
-
 protected:
     Sensor(const char *name, SensorContainer* parent)
     {

@@ -1,8 +1,9 @@
+#include "config.h"
 #include <SensirionI2CScd4x.h>
 #include "Scd4x.h"
 
 SensirionI2CScd4x scd4x;
-static int measurementIntervalMs = 5100;
+static int measurementIntervalMs = SCD4X_MEASUREMENT_INTERVAL;
 
 void Scd4xSensor::begin()
 {

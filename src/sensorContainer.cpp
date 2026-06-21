@@ -1,28 +1,24 @@
+#include "config.h"
 #include "sensorContainer.h"
-#include "Sfa3x.h"
-#include "Scd4x.h"
-#include "Sen5x.h"
+#include "Aht20.h"
+#include "Bmp280.h"
 #include <algorithm>
 #include <Wire.h>
 #include <Arduino.h>
-
-#define I2C_SDA 33
-#define I2C_SCL 32
 
 void SensorContainer::begin()
 {
     pinMode(I2C_SDA, OUTPUT | PULLUP);
     pinMode(I2C_SCL, OUTPUT | PULLUP);
 
-    Wire.begin(I2C_SDA, I2C_SCL, 10000UL);
+    Wire.begin(I2C_SDA, I2C_SCL, I2C_CLOCK);
 
-    _sensors.push_back(new Scd4xSensor("Scd4x", this));
-    _sensors.push_back(new Sfa3xSensor("Sfa3x", this));
-    _sensors.push_back(new Sen5xSensor("Sen5x", this));
+    _sensors.push_back(new Aht20Sensor("AHT20", this));
+    _sensors.push_back(new Bmp280Sensor("BMP280", this));
 
     forEachSensors([](Sensor *sensor)
                    {sensor->begin();
-                   delay(500); });
+                   delay(SENSOR_INIT_DELAY_MS); });
 }
 
 void SensorContainer::read()

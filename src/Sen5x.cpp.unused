@@ -1,15 +1,16 @@
+#include "config.h"
 #include <SensirionI2CSen5x.h>
 #include "Sen5x.h"
 
 SensirionI2CSen5x sen5x;
-static int measurementIntervalMs = 5100;
+static int measurementIntervalMs = SEN5X_MEASUREMENT_INTERVAL;
 
 void Sen5xSensor::begin()
 {
     sen5x.begin(Wire);
     startMeasurement();
-    // lastMeasurementTimeMs = millis();
-    // delay(measurementIntervalMs);
+    lastMeasurementTimeMs = millis();
+    delay(measurementIntervalMs);
 }
 
 void Sen5xSensor::read()

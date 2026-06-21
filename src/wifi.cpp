@@ -1,15 +1,12 @@
+#include "config.h"
 #include <WiFi.h>
-
-// SSID & Password
-const char* ssid = "esp32 sfa31";  // Enter your SSID here
-const char* password = NULL;  //Enter your Password here
 
 void Setup_Wifi(){
   Serial.println("Try Connecting to ");
-  Serial.println(ssid);
+  Serial.println(WIFI_AP_SSID);
 
   // Connect to your wi-fi modem
-  WiFi.begin(ssid, password);
+  WiFi.begin(WIFI_AP_SSID, WIFI_AP_PASSWORD);
 
   // Check wi-fi is connected to wi-fi network
   while (WiFi.status() != WL_CONNECTED) {
@@ -26,7 +23,7 @@ void Setup_Wifi_AP(){
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Setting AP (Access Point)…");
   // Remove the password parameter, if you want the AP (Access Point) to be open
-  WiFi.softAP(ssid, password);
+  WiFi.softAP(WIFI_AP_SSID, WIFI_AP_PASSWORD);
 
   IPAddress IP = WiFi.softAPIP();
   Serial.print("AP IP address: ");

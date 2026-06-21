@@ -1,30 +1,35 @@
-#include "compaundUi.h"
+#if defined(Compound)
+#include "compoundUi.h"
 
 #include "Web.h"
-#include "gatgetBle.h"
+#include "gadgetBle.h"
+#include "LcdDisplay.h"
 
-void CompaundUi::begin(){
+void CompoundUi::begin(){
     _children.push_back(new Web());
-    _children.push_back(new GatgetBle());
+    _children.push_back(new GadgetBle());
+    _children.push_back(new LcdDisplay());
     std::for_each(_children.begin(), _children.end(), [](uiInterface* ui){ui->begin();});
 }
 
-void CompaundUi::commitMeasures(){
+void CompoundUi::commitMeasures(){
     std::for_each(_children.begin(), _children.end(), [](uiInterface* ui){ui->commitMeasures();});
 }
 
-void CompaundUi::handleNetwork(){
+void CompoundUi::handleNetwork(){
     std::for_each(_children.begin(), _children.end(), [](uiInterface* ui){ui->handleNetwork();});
 }
 
-void CompaundUi::visit(InfoRecord* record){
+void CompoundUi::visit(InfoRecord* record){
     std::for_each(_children.begin(), _children.end(), [record](uiInterface* ui){ui->visit(record);});
 }
 
-void CompaundUi::visit(ErrorRecord* record){
+void CompoundUi::visit(ErrorRecord* record){
     std::for_each(_children.begin(), _children.end(), [record](uiInterface* ui){ui->visit(record);});
 }
 
-void CompaundUi::visit(MeasureRecord* record){
+void CompoundUi::visit(MeasureRecord* record){
     std::for_each(_children.begin(), _children.end(), [record](uiInterface* ui){ui->visit(record);});
 }
+
+#endif /* Compound */

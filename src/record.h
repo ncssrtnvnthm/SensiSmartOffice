@@ -2,10 +2,15 @@
 #define RECORD_H
 
 #include <WString.h>
-#include "Sensirion_Gadget_BLE.h"
-#include "uiInterface.h"
 
 class uiInterface;
+
+enum class SensorValueType : uint8_t
+{
+    TEMPERATURE,
+    HUMIDITY,
+    PRESSURE
+};
 
 struct Record
 {
@@ -48,12 +53,12 @@ struct ErrorRecord : Record
 
 struct MeasureRecord : Record
 {
-    SignalType Type;
+    SensorValueType Type;
     float Value;
 
     MeasureRecord(
         String deviceName,
-        SignalType type,
+        SensorValueType type,
         float value)
         : Record(deviceName), Type(type), Value(value){};
     ~MeasureRecord();
@@ -62,45 +67,33 @@ struct MeasureRecord : Record
 
     String toString() { return DeviceName + " > " + mapName(Type) + " : " + Value + mapUnit(Type); }
 
-    String mapName(SignalType st)
+    String mapName(SensorValueType st)
     {
         switch (st)
         {
-        case SignalType::TEMPERATURE_DEGREES_CELSIUS:
+        case SensorValueType::TEMPERATURE:
             return "Temperature";
-        case SignalType::RELATIVE_HUMIDITY_PERCENTAGE:
+        case SensorValueType::HUMIDITY:
             return "Humidity";
-        case SignalType::CO2_PARTS_PER_MILLION:
-            return "CO2";
-        case SignalType::HCHO_PARTS_PER_BILLION:
-            return "Formaldehyde";
-        case SignalType::PM2P5_MICRO_GRAMM_PER_CUBIC_METER:
-            return "PM2.5";
-        case SignalType::VOC_INDEX:
-            return "VOC";
+        case SensorValueType::PRESSURE:
+            return "Pressure";
         default:
             return "Undefined";
         }
     }
 
-    String mapUnit(SignalType st)
+    String mapUnit(SensorValueType st)
     {
         switch (st)
         {
-        case SignalType::TEMPERATURE_DEGREES_CELSIUS:
-            return "Celsius";
-        case SignalType::RELATIVE_HUMIDITY_PERCENTAGE:
-            return "%";
-        case SignalType::CO2_PARTS_PER_MILLION:
-            return "ppm";
-        case SignalType::HCHO_PARTS_PER_BILLION:
-            return "Formaldehyde";
-        case SignalType::PM2P5_MICRO_GRAMM_PER_CUBIC_METER:
-            return "ug/m3";
-        case SignalType::VOC_INDEX:
-            return "";
+        case SensorValueType::TEMPERATURE:
+            return " °C";
+        case SensorValueType::HUMIDITY:
+            return " %";
+        case SensorValueType::PRESSURE:
+            return " hPa";
         default:
-            return "Undefined";
+            return "";
         }
     }
 };

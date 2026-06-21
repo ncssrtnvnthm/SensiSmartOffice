@@ -1,9 +1,10 @@
-#ifndef COMPAUNDUI_H
-#define COMPAUNDUI_H
+#ifndef CompoundUI_H
+#define CompoundUI_H
 
 #include "uiInterface.h"
+#include <vector>
 
-class CompaundUi : public uiInterface
+class CompoundUi : public uiInterface
 {
 private:
     std::vector<uiInterface*> _children;
@@ -18,4 +19,4 @@ public:
     void visit(MeasureRecord* record);
 };
 
-#endif /*COMPAUNDUI_H*/
+#endif /*CompoundUI_H*/

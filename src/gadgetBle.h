@@ -1,8 +1,8 @@
-#ifndef GATGETBLE_H
-#define GATGETBLE_H
+#ifndef GADGETBLE_H
+#define GADGETBLE_H
 #include "uiInterface.h"
 
-class GatgetBle : public uiInterface
+class GadgetBle : public uiInterface
 {
 public:
     void begin();
@@ -14,4 +14,4 @@ public:
     void visit(MeasureRecord* record);
 };
 
-#endif /* GATGETBLE_H */
+#endif /* GADGETBLE_H */
