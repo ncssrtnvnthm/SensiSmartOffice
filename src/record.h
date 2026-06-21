@@ -87,7 +87,7 @@ struct MeasureRecord : Record
         switch (st)
         {
         case SensorValueType::TEMPERATURE:
-            return " °C";
+            return " &deg;C";
         case SensorValueType::HUMIDITY:
             return " %";
         case SensorValueType::PRESSURE:

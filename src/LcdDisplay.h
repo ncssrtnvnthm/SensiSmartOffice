@@ -9,8 +9,14 @@
 class LcdDisplay : public uiInterface
 {
 private:
+    static const unsigned long STATUS_TIMEOUT_MS = 5000;
     I2C_LCD lcd;
     int _statusRow;
+    unsigned long _lastStatusMs = 0;
+    bool _showingClock = true;
+
+    void showTime();
+    void clearRow(int row);
 
 public:
     LcdDisplay()

@@ -1,5 +1,7 @@
 #if defined(USE_BLE) || defined(Compound)
 #include "gadgetBle.h"
+#include "record.h"
+#include "Sensirion_UPT_Core.h"
 #include "Sensirion_Gadget_BLE.h"
 #include "WifiMultiLibraryWrapper.h"
 
@@ -10,10 +12,8 @@ DataProvider *provider;
 
 void GadgetBle::begin()
 {
-  sampleConfigSelector[DataType::T_RH_V3].sampleType = (uint8_t)-1;
   provider = new DataProvider(lib, DataType::T_RH_V3, true, false, &wifi);
   provider->begin();
-  provider->setSampleConfig(DataType::T_RH_CO2_VOC_PM25_HCHO);
   Serial.print("Sensirion GadgetBle Lib initialized with deviceId = ");
   Serial.println(provider->getDeviceIdString());
 }
@@ -32,19 +32,21 @@ void GadgetBle::visit(InfoRecord *record) {}
 void GadgetBle::visit(ErrorRecord *record) {}
 void GadgetBle::visit(MeasureRecord *record)
 {
-    SignalType st;
+    // T_RH_V3 expects: temperature first, then humidity
+    // writeValueToCurrentSample encodes and places into the correct slot
     switch (record->Type)
     {
     case SensorValueType::TEMPERATURE:
-        st = SignalType::TEMPERATURE_DEGREES_CELSIUS;
+        provider->writeValueToCurrentSample(record->Value,
+            SignalType::TEMPERATURE_DEGREES_CELSIUS);
         break;
     case SensorValueType::HUMIDITY:
-        st = SignalType::RELATIVE_HUMIDITY_PERCENTAGE;
+        provider->writeValueToCurrentSample(record->Value,
+            SignalType::RELATIVE_HUMIDITY_PERCENTAGE);
         break;
     default:
-        return; // PRESSURE not supported by Sensirion BLE profile
+        return;
     }
-    provider->writeValueToCurrentSample(record->Value, st);
 }
 
 #endif /* USE_BLE || Compound */

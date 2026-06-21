@@ -14,14 +14,25 @@
 #define SERIAL_BAUD     115200
 
 // --- Timing (milliseconds) ---
-#define MEASUREMENT_INTERVAL_MS     5000
-#define LOOP_DELAY_MS               3
-#define SENSOR_INIT_DELAY_MS        500
-#define COMMIT_DELAY_MS             500
+#define MEASUREMENT_INTERVAL_MS     1000    // How often sensors are read
+#define LOOP_DELAY_MS               3       // Yield between loop iterations
+#define SENSOR_INIT_DELAY_MS        500     // Pause between sensor inits at boot
+#define COMMIT_DELAY_MS             200     // Pause after committing measurements
 
 // --- WiFi Access Point ---
 #define WIFI_AP_SSID        "esp32_sensor_ap"
 #define WIFI_AP_PASSWORD    NULL
+
+// --- WiFi Station (for NTP time sync) ---
+// Set to your home WiFi to get internet time; leave SSID empty to skip
+#define WIFI_STA_SSID       ""
+#define WIFI_STA_PASSWORD   ""
+
+// --- NTP Time ---
+#define NTP_SERVER          "pool.ntp.org"
+#define NTP_GMT_OFFSET_SEC  3600        // GMT+1 (CET); change for your timezone
+#define NTP_DST_OFFSET_SEC  3600        // Summer time offset
+#define NTP_SYNC_INTERVAL_MS 3600000     // Re-sync every hour
 
 // --- Web Server ---
 #define WEB_SERVER_PORT         80
