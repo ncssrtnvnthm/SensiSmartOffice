@@ -1,6 +1,7 @@
 #include "config.h"
 #include <WiFi.h>
 #include <time.h>
+#include <cstdlib>
 
 static bool wifiStaConnected = false;
 static bool timeSynced = false;
@@ -12,15 +13,22 @@ void Setup_Wifi(){
   // Connect to your wi-fi modem
   WiFi.begin(WIFI_AP_SSID, WIFI_AP_PASSWORD);
 
-  // Check wi-fi is connected to wi-fi network
-  while (WiFi.status() != WL_CONNECTED) {
-  delay(1000);
-  Serial.print(".");
+  // Check wi-fi is connected to wi-fi network (with timeout)
+  int attempts = 0;
+  while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+    delay(500);
+    Serial.print(".");
+    attempts++;
   }
-  Serial.println("");
-  Serial.println("WiFi connected successfully");
-  Serial.print("Got IP: ");
-  Serial.println(WiFi.localIP());  //Show ESP32 IP on serial
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("");
+    Serial.println("WiFi connected successfully");
+    Serial.print("Got IP: ");
+    Serial.println(WiFi.localIP());
+  } else {
+    Serial.println("");
+    Serial.println("WiFi connection failed");
+  }
 }
 
 void Setup_Wifi_AP(){
@@ -35,8 +43,14 @@ void Setup_Wifi_AP(){
 }
 
 void Setup_Wifi_Station() {
+  // Always set timezone — needed even without WiFi for browser time sync
+  // via the captive portal's /time endpoint (settimeofday + getLocalTime)
+  setenv("TZ", POSIX_TZ_STRING, 1);
+  tzset();
+
   if (strlen(WIFI_STA_SSID) == 0) {
     Serial.println("No station SSID configured, skipping WiFi station");
+    Serial.println("(Time will sync from client browser via captive portal)");
     return;
   }
   Serial.print("Connecting to WiFi: ");
@@ -55,8 +69,8 @@ void Setup_Wifi_Station() {
     Serial.print("Station IP: ");
     Serial.println(WiFi.localIP());
 
-    // Immediate NTP time sync
-    configTime(NTP_GMT_OFFSET_SEC, NTP_DST_OFFSET_SEC, NTP_SERVER);
+    // NTP time sync — configTzTime sets both TZ and NTP in one call
+    configTzTime(POSIX_TZ_STRING, NTP_SERVER);
     struct tm ti;
     if (getLocalTime(&ti, 10000)) {
       timeSynced = true;

@@ -1,5 +1,5 @@
-#ifndef SENSORCONTAINER_H
-#define SENSORCONTAINER_H
+#ifndef SENSOR_CONTAINER_H
+#define SENSOR_CONTAINER_H
 
 #include "sensor.h"
 #include <queue>
@@ -23,4 +23,4 @@ public:
     void accept(uiInterface* ui);
 };
 
-#endif /* SENSORCONTAINER_H */
+#endif /* SENSOR_CONTAINER_H */

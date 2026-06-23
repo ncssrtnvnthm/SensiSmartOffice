@@ -1,4 +1,4 @@
-#if defined(USE_BLE) || defined(Compound)
+#if defined(USE_BLE) || defined(COMPOUND)
 #include "gadgetBle.h"
 #include "record.h"
 #include "Sensirion_UPT_Core.h"
@@ -49,4 +49,4 @@ void GadgetBle::visit(MeasureRecord *record)
     }
 }
 
-#endif /* USE_BLE || Compound */
+#endif /* USE_BLE || COMPOUND */

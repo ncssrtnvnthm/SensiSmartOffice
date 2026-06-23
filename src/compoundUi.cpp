@@ -1,9 +1,14 @@
-#if defined(Compound)
+#if defined(COMPOUND)
 #include "compoundUi.h"
 
 #include "Web.h"
 #include "gadgetBle.h"
 #include "LcdDisplay.h"
+
+CompoundUi::~CompoundUi() {
+    for (auto* child : _children) delete child;
+    _children.clear();
+}
 
 void CompoundUi::begin(){
     _children.push_back(new Web());
@@ -32,4 +37,4 @@ void CompoundUi::visit(MeasureRecord* record){
     std::for_each(_children.begin(), _children.end(), [record](uiInterface* ui){ui->visit(record);});
 }
 
-#endif /* Compound */
+#endif /* COMPOUND */

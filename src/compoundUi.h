@@ -1,5 +1,5 @@
-#ifndef CompoundUI_H
-#define CompoundUI_H
+#ifndef COMPOUND_UI_H
+#define COMPOUND_UI_H
 
 #include "uiInterface.h"
 #include <vector>
@@ -10,6 +10,8 @@ private:
     std::vector<uiInterface*> _children;
 
 public:
+    ~CompoundUi();
+
     void begin();
     void commitMeasures();
     void handleNetwork();
@@ -19,4 +21,4 @@ public:
     void visit(MeasureRecord* record);
 };
 
-#endif /*CompoundUI_H*/
+#endif /* COMPOUND_UI_H */

@@ -1,5 +1,6 @@
 #include "Bmp280.h"
 #include <Arduino.h>
+#include <cmath>
 
 bool Bmp280Sensor::tryBegin(uint8_t addr)
 {
@@ -27,7 +28,7 @@ void Bmp280Sensor::begin()
 void Bmp280Sensor::read()
 {
     float pressurePa = bmp.readPressure();
-    if (pressurePa <= 0.0f)
+    if (std::isnan(pressurePa) || pressurePa <= 0.0f)
     {
         _parent->push(new ErrorRecord(_name, "BMP280 read failed"));
         return;

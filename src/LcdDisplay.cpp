@@ -1,4 +1,4 @@
-#if defined(LCD) || defined(Compound)
+#if defined(LCD) || defined(COMPOUND)
 #include "config.h"
 #include "LcdDisplay.h"
 #include <time.h>
@@ -14,10 +14,10 @@ void LcdDisplay::showTime() {
     if (getLocalTime(&ti, 0)) {
         char buf[21];
         strftime(buf, sizeof(buf), "%Y/%m/%d %H:%M", &ti);
-        lcd.setCursor(0, _statusRow);
+        lcd.setCursor(2, _statusRow);
         lcd.print(buf);
     } else {
-        lcd.setCursor(0, _statusRow);
+        lcd.setCursor(2, _statusRow);
         lcd.print("----/--/-- --:--");
     }
 }
@@ -73,26 +73,23 @@ void LcdDisplay::visit(MeasureRecord *record)
     switch (record->Type)
     {
     case SensorValueType::TEMPERATURE:
-        snprintf(buf, sizeof(buf), "T: %.1f C", record->Value);
+        snprintf(buf, sizeof(buf), "%-5s %-12.1f %-1s", "TEMP:", record->Value, "C");
         lcd.setCursor(0, 0);
         lcd.print(buf);
-        for (int i = strlen(buf); i < LCD_COLUMNS; i++) lcd.print(' ');
         break;
 
     case SensorValueType::HUMIDITY:
-        snprintf(buf, sizeof(buf), "H: %.1f %%", record->Value);
+        snprintf(buf, sizeof(buf), "%-5s %-12.1f %-1s", "RH:", record->Value, "%");
         lcd.setCursor(0, 1);
         lcd.print(buf);
-        for (int i = strlen(buf); i < LCD_COLUMNS; i++) lcd.print(' ');
         break;
 
     case SensorValueType::PRESSURE:
-        snprintf(buf, sizeof(buf), "P: %.1f hPa", record->Value);
+        snprintf(buf, sizeof(buf), "%-5s %-10.1f %-3s", "P:", record->Value, "hPa");
         lcd.setCursor(0, 2);
         lcd.print(buf);
-        for (int i = strlen(buf); i < LCD_COLUMNS; i++) lcd.print(' ');
         break;
     }
 }
 
-#endif /* LCD || Compound */
+#endif /* LCD || COMPOUND */

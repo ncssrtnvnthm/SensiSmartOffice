@@ -3,8 +3,8 @@
 #include "sensorContainer.h"
 #include <time.h>
 
-// Forward-declare time helpers (defined in wifi.cpp for WEB/Compound envs)
-#if defined(WEB) || defined(Compound)
+// Forward-declare time helpers (defined in wifi.cpp for WEB/COMPOUND envs)
+#if defined(WEB) || defined(COMPOUND)
 bool IsWifiStationConnected();
 bool IsTimeSynced();
 #endif
@@ -15,7 +15,7 @@ bool IsTimeSynced();
 #ifdef USE_BLE
 #include "gadgetBle.h"
 #endif
-#ifdef Compound
+#ifdef COMPOUND
 #include "compoundUi.h"
 #endif
 #ifdef LCD
@@ -30,11 +30,12 @@ int64_t lastMeasurementTimeMs = 0;
 int64_t lastNtpSyncMs = 0;
 
 static void syncNtpTime() {
-#if defined(WEB) || defined(Compound)
+#if defined(WEB) || defined(COMPOUND)
   if (!IsWifiStationConnected()) return;
   if (millis() - lastNtpSyncMs < NTP_SYNC_INTERVAL_MS && lastNtpSyncMs != 0) return;
 
-  configTime(NTP_GMT_OFFSET_SEC, NTP_DST_OFFSET_SEC, NTP_SERVER);
+  // configTime() already called once in Setup_Wifi_Station();
+  // sntp handles background re-sync automatically.
   struct tm timeinfo;
   if (getLocalTime(&timeinfo, 5000)) {
     lastNtpSyncMs = millis();
@@ -64,15 +65,14 @@ void setup()
 
 #ifdef WEB
   ui = new Web();
-#endif
-#ifdef USE_BLE
+#elif defined(USE_BLE)
   ui = new GadgetBle();
-#endif
-#ifdef Compound
+#elif defined(COMPOUND)
   ui = new CompoundUi();
-#endif
-#ifdef LCD
+#elif defined(LCD)
   ui = new LcdDisplay();
+#else
+  #error "No UI backend defined (WEB, USE_BLE, COMPOUND, or LCD)"
 #endif
 
   ui->begin();

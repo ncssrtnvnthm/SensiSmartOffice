@@ -1,4 +1,4 @@
-#if defined(WEB) || defined(Compound)
+#if defined(WEB) || defined(COMPOUND)
 #include "config.h"
 #include "Web.h"
 #include <WebServer.h>
@@ -18,6 +18,17 @@ void Web::begin()
   server = new WebServer(WEB_SERVER_PORT);
   server->on("/", std::bind(&Web::handle_root, this));
   server->on("/time", std::bind(&Web::handle_time, this));
+
+  // Common captive-portal probe URLs (avoids "request handler not found" errors)
+  server->on("/generate_204", std::bind(&Web::handle_root, this));   // Android
+  server->on("/hotspot-detect.html", std::bind(&Web::handle_root, this)); // Apple
+  server->on("/library/test/success.html", std::bind(&Web::handle_root, this)); // Apple
+  server->on("/ncsi.txt", std::bind(&Web::handle_root, this));       // Windows
+  server->on("/connecttest.txt", std::bind(&Web::handle_root, this)); // Windows
+  server->on("/success.txt", std::bind(&Web::handle_root, this));    // Generic
+  server->on("/redirect", std::bind(&Web::handle_root, this));       // Generic
+  server->on("/fwlink/", std::bind(&Web::handle_root, this));        // Microsoft NCSI
+
   server->onNotFound(std::bind(&Web::handle_root, this));
   server->begin();
   Serial.println("HTTP server + captive portal started");
@@ -27,6 +38,12 @@ void Web::begin()
 void Web::handle_time() {
   if (server->hasArg("t")) {
     time_t t = server->arg("t").toInt();
+    // Basic sanity: reject timestamps before 2020-01-01 (Unix 1577836800)
+    if (t < 1577836800) {
+      Serial.printf("Rejected invalid client timestamp: %ld\n", (long)t);
+      server->send(400, "text/plain", "Bad timestamp");
+      return;
+    }
     struct timeval tv = { .tv_sec = t, .tv_usec = 0 };
     settimeofday(&tv, nullptr);
     struct tm ti;
@@ -81,6 +98,7 @@ void Web::handle_root()
 
 String Web::buildPage() {
   String response = HTMLHeader;
+  response.reserve(2048);  // Pre-allocate to reduce heap fragmentation
 
   float t = _tempHistory.empty() ? 0 : _tempHistory.back();
   float h = _humHistory.empty() ? 0 : _humHistory.back();

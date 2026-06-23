@@ -9,7 +9,15 @@ enum class SensorValueType : uint8_t
 {
     TEMPERATURE,
     HUMIDITY,
-    PRESSURE
+    PRESSURE,
+    CO2,
+    VOC_INDEX,
+    NOX_INDEX,
+    PM1P0,
+    PM2P5,
+    PM4P0,
+    PM10P0,
+    HCHO
 };
 
 struct Record
@@ -77,6 +85,22 @@ struct MeasureRecord : Record
             return "Humidity";
         case SensorValueType::PRESSURE:
             return "Pressure";
+        case SensorValueType::CO2:
+            return "CO2";
+        case SensorValueType::VOC_INDEX:
+            return "VOC Index";
+        case SensorValueType::NOX_INDEX:
+            return "NOx Index";
+        case SensorValueType::PM1P0:
+            return "PM1.0";
+        case SensorValueType::PM2P5:
+            return "PM2.5";
+        case SensorValueType::PM4P0:
+            return "PM4.0";
+        case SensorValueType::PM10P0:
+            return "PM10";
+        case SensorValueType::HCHO:
+            return "Formaldehyde";
         default:
             return "Undefined";
         }
@@ -92,6 +116,22 @@ struct MeasureRecord : Record
             return " %";
         case SensorValueType::PRESSURE:
             return " hPa";
+        case SensorValueType::CO2:
+            return " ppm";
+        case SensorValueType::VOC_INDEX:
+            return "";
+        case SensorValueType::NOX_INDEX:
+            return "";
+        case SensorValueType::PM1P0:
+            return " &micro;g/m³";
+        case SensorValueType::PM2P5:
+            return " &micro;g/m³";
+        case SensorValueType::PM4P0:
+            return " &micro;g/m³";
+        case SensorValueType::PM10P0:
+            return " &micro;g/m³";
+        case SensorValueType::HCHO:
+            return " ppb";
         default:
             return "";
         }

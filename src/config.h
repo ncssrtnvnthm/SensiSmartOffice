@@ -8,7 +8,7 @@
 // --- I²C Bus ---
 #define I2C_SDA         21
 #define I2C_SCL         22
-#define I2C_CLOCK       10000UL
+#define I2C_CLOCK       100000UL
 
 // --- Serial ---
 #define SERIAL_BAUD     115200
@@ -21,7 +21,7 @@
 
 // --- WiFi Access Point ---
 #define WIFI_AP_SSID        "esp32_sensor_ap"
-#define WIFI_AP_PASSWORD    NULL
+#define WIFI_AP_PASSWORD    nullptr
 
 // --- WiFi Station (for NTP time sync) ---
 // Set to your home WiFi to get internet time; leave SSID empty to skip
@@ -30,8 +30,13 @@
 
 // --- NTP Time ---
 #define NTP_SERVER          "pool.ntp.org"
-#define NTP_GMT_OFFSET_SEC  3600        // GMT+1 (CET); change for your timezone
-#define NTP_DST_OFFSET_SEC  3600        // Summer time offset
+// POSIX TZ string for Central European Time with automatic DST:
+//   CET-1      = standard time zone (UTC+1; POSIX inverts the sign)
+//   CEST       = daylight saving time zone name
+//   ,M3.5.0    = DST starts: March, last Sunday, at 2:00 AM
+//   ,M10.5.0/3  = DST ends:   October, last Sunday, at 3:00 AM
+// Change this string for other timezones (see 'man tzset' POSIX format)
+#define POSIX_TZ_STRING     "CET-1CEST,M3.5.0,M10.5.0/3"
 #define NTP_SYNC_INTERVAL_MS 3600000     // Re-sync every hour
 
 // --- Web Server ---

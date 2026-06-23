@@ -8,9 +8,6 @@
 
 void SensorContainer::begin()
 {
-    pinMode(I2C_SDA, OUTPUT | PULLUP);
-    pinMode(I2C_SCL, OUTPUT | PULLUP);
-
     Wire.begin(I2C_SDA, I2C_SCL, I2C_CLOCK);
 
     _sensors.push_back(new Aht20Sensor("AHT20", this));

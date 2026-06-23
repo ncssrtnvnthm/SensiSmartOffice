@@ -7,6 +7,8 @@ struct MeasureRecord;
 class uiInterface
 {
 public:
+    virtual ~uiInterface() = default;
+
     virtual void begin() = 0;
 
     virtual void visit(InfoRecord* record) = 0;
